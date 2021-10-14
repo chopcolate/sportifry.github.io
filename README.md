@@ -1,2 +1,2 @@
 # sportifry.github.io
-Sportifry-Group 10
+Sportifry-Group 6
