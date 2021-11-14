@@ -1,9 +1,10 @@
+import MusicSite from './components/MusicSite';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <div class="container-fuild">this is container</div>
+      <MusicSite />
     </div>
   );
 }
