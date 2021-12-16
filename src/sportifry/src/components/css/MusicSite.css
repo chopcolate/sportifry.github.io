@@ -1,0 +1,145 @@
+.music-site {
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+  min-height: 100vh;
+  color: white;
+}
+
+.music-site-nav,
+.music-site-nav-nonuser {
+  background-color: #000000;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.music-site-main {
+  background-color: #2a2a2a;
+}
+
+.music-site-player {
+  background-color: #000000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+/* music navbar */
+
+.music-site-nav-nonuser,
+.music-site-nav {
+  padding: 0 1rem;
+}
+
+.music-site-nav-nonuser .logo,
+.music-site-nav .logo {
+  display: flex;
+}
+
+.music-site-nav-nonuser .logo img,
+.music-site-nav .logo img {
+  width: 30%;
+}
+
+.music-site-nav-nonuser .logo p,
+.music-site-nav .logo p {
+  width: 70%;
+  font-size: 1.5rem;
+  padding: 1.5rem 0;
+}
+
+.music-site-nav-nonuser nav,
+.music-site-nav nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.music-site-nav-nonuser nav h1,
+.music-site-nav nav h1 {
+  text-align: center;
+  margin: 0.3rem 0;
+}
+
+.music-site-nav-nonuser nav h1:hover,
+.music-site-nav nav h1:hover {
+  background-color: #282828;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.music-site-nav-nonuser .auth-form .auth-input input {
+  width: 80%;
+  height: 2rem;
+  margin: 0.2rem 10%;
+  border-radius: 10px;
+  padding-left: 0.5rem;
+  outline: none;
+}
+
+.music-site-nav-nonuser .auth-form .auth-button {
+  text-align: center;
+}
+
+.music-site-nav-nonuser .auth-form .auth-button button {
+  width: 38%;
+  height: 1.8rem;
+  margin: 0.2rem 0.2rem;
+  background-color: #1ed760;
+  border: none;
+  outline: none;
+  color: white;
+  border-radius: 10px;
+}
+
+.music-site-nav .user {
+  text-align: center;
+}
+
+.music-site-nav .user img {
+  width: 50%;
+  margin-top: 2rem;
+}
+
+.music-site-nav .chatbox-container {
+  border: 1px solid white;
+  width: 90%;
+  margin: 1rem 5%;
+  height: 40%;
+}
+
+.music-site-nav .chatbox-container .chatbox {
+  overflow-y: scroll;
+  height: 85%;
+  margin-bottom: 5%;
+}
+
+.music-site-nav .chatbox-container input {
+  width: 96%;
+  height: 10%;
+  outline: none;
+  border: none;
+  padding: 0 0.5rem;
+  border-radius: 10px;
+  margin: 0 2%;
+}
+
+/* music search */
+.music-search {
+  width: 50%;
+  height: 100vh;
+  padding: 0 1rem;
+}
+
+.music-search input {
+  width: 80%;
+  height: 2rem;
+  margin: 0.5rem 10%;
+  border-radius: 10px;
+  padding: 0 0.5rem;
+  outline: none;
+}
+
+#songbox {
+  overflow-y: scroll;
+  max-height: 90%;
+}
