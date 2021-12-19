@@ -1,29 +1,29 @@
-import { useState } from 'react/cjs/react.development';
+import { useState } from 'react';
 import '../css/MusicSite.css';
 import MusicMain from './MusicMain';
 import { MusicNav, MusicNavNonUser } from './MusicNav';
 import { MusicPlayer } from './MusicPlayer';
 
 export default function MusicSite() {
-  const [isLogin, setLogin] = useState(false);
+  const [isLogin, setLogin] = useState(localStorage.getItem('username'));
 
   return (
     <div className="music-site">
-      {isLogin ? (
+      {isLogin !== null ? (
         <MusicNav
           onLogout={() => {
             localStorage.removeItem('role');
-            setLogin(false);
+            setLogin(null);
           }}
         />
       ) : (
         <MusicNavNonUser
           onLogin={() => {
-            setLogin(true);
+            setLogin(localStorage.getItem('username'));
           }}
         />
       )}
-      <MusicMain />
+      <MusicMain username={isLogin} />
       <MusicPlayer />
     </div>
   );

@@ -1,26 +1,21 @@
-.song-card {
+.playlist-card {
   display: grid;
   grid-template-columns: 15% 70% 5%;
   border-radius: 10px;
   margin: 0.5rem 0.5rem;
-  background-color: #1ed760;
+  background-color: #143620;
   height: inherit;
   padding: 0.5rem 0.5rem;
   grid-column-gap: 4%;
-  cursor: pointer;
 }
 
-.song-card img {
+.playlist-card img {
   width: 100%;
   height: 5rem;
-
   border-radius: 50%;
 }
 
-.song-card div {
-  padding: 0.1rem 0.5rem;
-}
-
-.song-card div:last-child {
-  font-size: 2rem;
+.playlist-card h1 {
+  font-size: 1.5rem;
+  padding: 0.5rem 0;
 }

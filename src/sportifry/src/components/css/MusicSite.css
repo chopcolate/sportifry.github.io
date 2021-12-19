@@ -15,13 +15,14 @@
 
 .music-site-main {
   background-color: #2a2a2a;
+  display: flex;
 }
 
 .music-site-player {
   background-color: #000000;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  padding: 0 0.5rem;
 }
 
 /* music navbar */
@@ -141,5 +142,113 @@
 
 #songbox {
   overflow-y: scroll;
+  min-height: 90%;
   max-height: 90%;
+}
+
+/* music playlist */
+.music-playlist {
+  padding: 1rem 1rem;
+  width: 50%;
+}
+
+.music-playlist .playlist,
+.comment {
+  border: 1px solid white;
+}
+
+.music-playlist .playlist {
+  background-color: #1ed760;
+  text-align: center;
+  font-size: 3rem;
+  overflow-y: scroll;
+  height: 40vh;
+  margin-bottom: 5vh;
+}
+.music-playlist .playlist .playlist-header {
+  display: grid;
+  grid-template-columns: 80% 20%;
+}
+
+.comment-container {
+  border: 1px solid white;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  height: 50vh;
+}
+
+#comment {
+  overflow-y: scroll;
+}
+
+.comment-container input {
+  width: 96%;
+  height: 10%;
+  outline: none;
+  border: none;
+  padding: 0 0.5rem;
+  border-radius: 10px;
+  margin: 2px 2%;
+}
+
+/* music player */
+.music-site-player-controller {
+  padding: 1rem 0.5rem;
+  text-align: center;
+  height: 50vh;
+}
+.music-site-player-controller img {
+  width: 10rem;
+  border-radius: 50%;
+  height: 10rem;
+  margin-bottom: 1rem;
+  animation-name: spin;
+  animation-duration: 10000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.music-site-player-controller .controller-btn-container {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem 0;
+}
+
+.music-site-player-controller #playing-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.music-site-player-controller #playing-author {
+  font-size: 0.8rem;
+}
+
+#progress-container {
+  background-color: white;
+  height: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#playing-progress {
+  background-color: #1ed760;
+  height: 4px;
+  border-radius: 10px;
+}
+
+#playing-lyric {
+  overflow-y: scroll;
+  height: 45vh;
+  padding: 0.5rem 0;
+  font-size: 0.8rem;
 }
