@@ -1,0 +1,24 @@
+.todo-card {
+    max-width: 400px;
+    grid-template-columns: 15% 75% 10%;
+    border-radius: 10px;
+    margin: 0.5rem 0.5rem;
+    background-color: #1ed760;
+    height: 5rem;
+    padding: 0.5rem 0.5rem;
+}
+.todo-add-button {
+    font-size: 16px;
+    margin: 4px 2px;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    background-color: #1ed760;
+}
+
+
+
+.todo-main {
+    background-color: #2a2a2a;
+}

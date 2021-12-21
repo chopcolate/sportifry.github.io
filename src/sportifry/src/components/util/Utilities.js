@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, doc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { addDoc, arrayUnion, collection, doc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCs5H90lC4gohqDtz0bJ-FkF6UD9O8Rkeo',
@@ -232,4 +232,69 @@ const AddComment = async (msg) => {
   );
 };
 
-export { SignIn, DisplaySong, SearchSong, SignUp, DisplayChat, AddChat, DisplayPlaylist, AddComment };
+const GetTodo = async()=> {
+    
+  const userRef = collection(db, 'User');
+  const q = query(userRef, where("username","==",localStorage.getItem('username')));
+  const todocall = await getDocs(q);
+  const todolist = todocall.docs[0].data().to_do_array;
+  const todoRef = await getDocs(query(collection(db, 'TodoList')));
+  
+  todolist.forEach((todo)=>{
+    var str = todo.replace(/ /g, '');
+    todoRef.forEach((doc)=>{
+      if (str===doc.id){
+        document.getElementsByClassName("todo-main")[0].insertAdjacentHTML('beforeend',`
+        <div class="todo-card">
+          <form>
+            <div>
+              <h1>${doc.data().title}</h1>
+            </div>
+            <div>
+              <h1>${doc.data().content}</h1>
+            </div>
+            <button class="todo-add-button">x</button>
+          </form>
+        </div>
+        `)
+      }
+    })
+  })
+};
+const SubmitTodo = async(titlestring, contentstring)=>{
+const todoRef = collection(db,'TodoList');
+if (titlestring ==='' || contentstring === '') {
+  return false;
+}
+else{
+  const docRef = await addDoc(todoRef, {
+    content: contentstring,
+    title: titlestring,
+  });
+  const userRef =  await getDocs(query(collection(db,'User'), where("username","==",localStorage.getItem('username'))));
+  userRef.forEach(async (user)=>{
+    const todoarrayRef = doc(db,'User',user.id);
+    await updateDoc(todoarrayRef, {
+      to_do_array: arrayUnion(docRef.id)
+    } );  
+
+ });
+ document.getElementsByClassName("todo-main")[0].insertAdjacentHTML('beforeend',`
+        <div class="todo-card">
+          <form>
+            <div>
+              <h1>${titlestring}</h1>
+            </div>
+            <div>
+              <h1>${contentstring}</h1>
+            </div>
+            <button class="todo-add-button">x</button>
+          </form>
+        </div>
+        `)
+  return true;
+  }
+};
+
+
+export { SignIn, DisplaySong, SearchSong, SignUp, DisplayChat, AddChat, DisplayPlaylist, AddComment, GetTodo, SubmitTodo };
