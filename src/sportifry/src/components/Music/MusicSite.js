@@ -23,8 +23,10 @@ export default function MusicSite() {
           }}
         />
       )}
-      <MusicMain username={isLogin} />
-      <MusicPlayer />
+      <div id="music-container">
+        <MusicMain username={isLogin} />
+        <MusicPlayer />
+      </div>
     </div>
   );
 }

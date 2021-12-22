@@ -4,18 +4,18 @@
   border-radius: 10px;
   margin: 0.5rem 0.5rem;
   background-color: #143620;
-  height: inherit;
+  height: 4rem;
   padding: 0.5rem 0.5rem;
   grid-column-gap: 4%;
 }
 
 .playlist-card img {
   width: 100%;
-  height: 5rem;
+  height: 3rem;
   border-radius: 50%;
 }
 
 .playlist-card h1 {
-  font-size: 1.5rem;
-  padding: 0.5rem 0;
+  font-size: 1rem;
+  height: 1rem;
 }

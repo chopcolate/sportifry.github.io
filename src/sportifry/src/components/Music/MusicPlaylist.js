@@ -1,11 +1,20 @@
 import { AddComment, DisplayPlaylist } from '../util/Utilities';
 import '../css/PlaylistCard.css';
+import '../css/MusicSite.css';
+import { MusicNav } from '../Music/MusicNav';
+import { MusicPlayer } from './MusicPlayer';
 
 function MusicPlaylist(prop) {
   return (
-    <div className="music-playlist">
-      <Playlist username={prop.username} />
-      <Comment />
+    <div className="music-site">
+      <MusicNav />
+      <div id="music-container">
+        <div className="music-playlist">
+          <Playlist username={localStorage.getItem('username')} />
+          <PLSong />
+        </div>
+        <MusicPlayer />
+      </div>
     </div>
   );
 }
@@ -25,11 +34,14 @@ function Playlist(prop) {
     <div className="playlist">
       <div className="playlist-header">
         <div style={{ fontSize: '2rem' }}>Playlist</div>
-        <div style={{ fontSize: '2rem' }}>+</div>
       </div>
       <div className="playlist-list"></div>
     </div>
   );
+}
+
+function PLSong() {
+  return <div className="playlist" id="playlist-song"></div>;
 }
 
 function Comment() {
@@ -52,4 +64,4 @@ function Comment() {
   );
 }
 
-export { MusicPlaylist };
+export { MusicPlaylist, Playlist, Comment };
