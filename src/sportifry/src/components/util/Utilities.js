@@ -3,10 +3,12 @@ import {
   addDoc,
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   getFirestore,
+  onSnapshot,
   query,
   setDoc,
   updateDoc,
@@ -68,22 +70,20 @@ const SignUp = async (data) => {
 };
 
 const DisplayChat = async () => {
-  const chatRef = collection(db, 'chatbox');
-  const qs = await getDocs(chatRef);
-  const chatList = qs.docs.map((msg) => {
-    return msg.data();
-  });
-  chatList.forEach((msg) => {
-    document.getElementsByClassName('chatbox')[0].insertAdjacentHTML(
-      'beforeend',
-      `<div class="chatbubble">
-        <img alt="avatar" src=${avatarURL} />
-        <div>
-          <p>${msg.username}</p>
-          <div>${msg.text}</div>
-        </div>
-      </div>`
-    );
+  onSnapshot(collection(db, 'chatbox'), (querySnapshot) => {
+    document.getElementsByClassName('chatbox')[0].innerHTML = '';
+    querySnapshot.forEach((msg) => {
+      document.getElementsByClassName('chatbox')[0].insertAdjacentHTML(
+        'beforeend',
+        `<div class="chatbubble">
+          <img alt="avatar" src=${avatarURL} />
+          <div>
+            <p>${msg.data().username}</p>
+            <div>${msg.data().text}</div>
+          </div>
+        </div>`
+      );
+    });
   });
 };
 
@@ -95,16 +95,6 @@ const AddChat = async (msg) => {
     username: localStorage.getItem('username'),
     text: msg,
   });
-  document.getElementsByClassName('chatbox')[0].insertAdjacentHTML(
-    'beforeend',
-    `<div class="chatbubble">
-      <img alt="avatar" src=${avatarURL} />
-      <div>
-        <p>${localStorage.getItem('username')}</p>
-        <div>${msg}</div>
-      </div>
-    </div>`
-  );
 };
 
 const DisplaySong = async () => {
@@ -227,37 +217,38 @@ const PrevSong = () => {
   }
 };
 
-const DisplayPlaylist = async (username) => {
-  const plRef = collection(db, 'Playlist');
-  const q = query(plRef, where('owner', '==', username));
-  const qs = await getDocs(q);
-  const plList = qs.docs.map((pl) => {
-    return [pl.id, pl.data()];
-  });
-  document.getElementsByClassName('playlist-list')[0].innerHTML = '';
-  plList.forEach((pl) => {
-    document.getElementsByClassName('playlist-list')[0].insertAdjacentHTML(
-      'beforeend',
-      `<div class="playlist-card" id='${pl[0]}'>
-          <img alt="thumbnail" src=${pl[1].playlist_image} />
-          <h1>${pl[1].playlist_name}</h1>
-        </div>`
-    );
-    document.getElementById(`${pl[0]}`).addEventListener('click', (e) => {
-      DisplaySongPL(e.target.id);
+const DisplayPlaylist = async () => {
+  const q = query(collection(db, 'Playlist'), where('owner', '==', localStorage.getItem('username')));
+  onSnapshot(q, (querySnapshot) => {
+    document.getElementsByClassName('playlist-list')[0].innerHTML = '';
+    querySnapshot.forEach((doc) => {
+      document.getElementsByClassName('playlist-list')[0].insertAdjacentHTML(
+        'beforeend',
+        `<div class="playlist-card" id='${doc.id}'>
+            <img alt="thumbnail" src=${doc.data().playlist_image} />
+            <h1>${doc.data().playlist_name}</h1>
+            <p>Show more</p>
+          </div>`
+      );
+      document.getElementById(`${doc.id}`).addEventListener('click', (e) => {
+        localStorage.setItem('pl', e.target.id);
+        DisplaySongPL();
+      });
     });
   });
 };
 
-const DisplaySongPL = async (pl) => {
+const DisplaySongPL = async () => {
+  const pl = localStorage.getItem('pl');
   if (pl === '') {
     return;
   }
-  document.getElementById('playlist-song').innerHTML = '';
-  const plRef = doc(db, 'Playlist', pl);
-  const qs = await getDoc(plRef);
-  if (qs.exists()) {
-    const songarr = qs.data().song_array;
+  onSnapshot(doc(db, 'Playlist', pl), async (querySnapshot) => {
+    document.getElementById('playlist-song').innerHTML = '';
+    if (querySnapshot.data() === undefined) {
+      return;
+    }
+    const songarr = querySnapshot.data().song_array;
     const songRef = collection(db, 'Song');
     let count = 0;
     nowplaying = [];
@@ -272,12 +263,12 @@ const DisplaySongPL = async (pl) => {
         document.getElementById('playlist-song').insertAdjacentHTML(
           'beforeend',
           `<div class="plsong" >
-            <img alt="thumbnail" src=${song.song_image} />
-            <div>
-              <h1>${song.song_name}</h1>
-              <p> ${song.singer}</p>
-            </div>
-          </div>`
+          <img alt="thumbnail" src=${song.song_image} />
+          <div>
+            <h1>${song.song_name}</h1>
+            <p> ${song.singer}</p>
+          </div>
+        </div>`
         );
         document.getElementsByClassName('plsong')[count].addEventListener('click', (e) => {
           PlaySong(song);
@@ -286,7 +277,7 @@ const DisplaySongPL = async (pl) => {
       });
       count++;
     }
-  }
+  });
 };
 
 const AddComment = async (msg) => {
@@ -326,6 +317,79 @@ const AddComment = async (msg) => {
   );
 };
 
+const AddPlaylist = async (input) => {
+  const { name, img } = input;
+  if (name === '' || img === '') {
+    return;
+  }
+  await addDoc(collection(db, 'Playlist'), {
+    playlist_name: name,
+    playlist_image: img,
+    owner: localStorage.getItem('username'),
+    song_array: [],
+  });
+};
+
+const DeletePlaylist = async (input) => {
+  if (input === '') {
+    return;
+  }
+  const plRef = collection(db, 'Playlist');
+  const q = query(plRef, where('playlist_name', '==', input));
+  const qs = await getDocs(q);
+  const list = qs.docs.map((pl) => {
+    return pl.id;
+  });
+  if (list.length > 0) {
+    await deleteDoc(doc(db, 'Playlist', list[0]));
+  }
+};
+
+const AddPlaylistSong = async (song) => {
+  if (song === '') {
+    return;
+  }
+  const pl = localStorage.getItem('pl');
+  if (pl === null) {
+    return;
+  }
+  const updateRef = doc(db, 'Playlist', pl);
+  const docSnap = await getDoc(updateRef);
+
+  if (docSnap.exists()) {
+    const temp = [...docSnap.data().song_array, song];
+    await updateDoc(updateRef, {
+      song_array: temp,
+    });
+  }
+};
+
+const DeletePlaylistSong = async (song) => {
+  if (song === '') {
+    return;
+  }
+  const pl = localStorage.getItem('pl');
+  if (pl === null) {
+    return;
+  }
+
+  const updateRef = doc(db, 'Playlist', pl);
+  const docSnap = await getDoc(updateRef);
+
+  if (docSnap.exists()) {
+    const temp = docSnap.data().song_array;
+    for (let i = 0; i < temp.length; i++) {
+      if (temp[i] === song) {
+        temp.splice(i, 1);
+        i--;
+      }
+    }
+    await updateDoc(updateRef, {
+      song_array: temp,
+    });
+  }
+};
+
 const GetTodo = async () => {
   const userRef = collection(db, 'User');
   const q = query(userRef, where('username', '==', localStorage.getItem('username')));
@@ -357,6 +421,7 @@ const GetTodo = async () => {
     });
   });
 };
+
 const SubmitTodo = async (titlestring, contentstring) => {
   const todoRef = collection(db, 'TodoList');
   if (titlestring === '' || contentstring === '') {
@@ -395,6 +460,114 @@ const SubmitTodo = async (titlestring, contentstring) => {
   }
 };
 
+const DisplayAccount = async () => {
+  onSnapshot(collection(db, 'User'), (querySnapshot) => {
+    document.getElementsByClassName('display-account')[0].innerHTML = '';
+    querySnapshot.forEach((acc) => {
+      document.getElementsByClassName('display-account')[0].insertAdjacentHTML(
+        'beforeend',
+        `<div class="account-bubble">
+          <img alt="avatar" src=${avatarURL} />
+          <div>
+            <p>Username: ${acc.data().username}</p>
+            <div>Role: ${acc.data().role}</div>
+          </div>
+        </div>`
+      );
+    });
+  });
+};
+
+const AddAccount = async ({ username, password, role }) => {
+  if (username === '' || password === '' || role === '') {
+    return false;
+  }
+  const usersRef = collection(db, 'User');
+  const q = query(usersRef, where('username', '==', username));
+  const qs = await getDocs(q);
+  if (qs.docs.length > 0) {
+    return false;
+  } else {
+    await addDoc(usersRef, {
+      username: username,
+      password: password,
+      role: role,
+      to_do_array: [],
+    });
+    return true;
+  }
+};
+
+const DeleteAccount = async (username) => {
+  if (username === '') {
+    return;
+  }
+  const plRef = collection(db, 'User');
+  const q = query(plRef, where('username', '==', username));
+  const qs = await getDocs(q);
+  const list = qs.docs.map((pl) => {
+    return pl.id;
+  });
+  if (list.length > 0) {
+    await deleteDoc(doc(db, 'User', list[0]));
+  }
+};
+
+const DisplayManageSong = async () => {
+  onSnapshot(collection(db, 'Song'), (querySnapshot) => {
+    document.getElementsByClassName('manage-display-song')[0].innerHTML = '';
+    querySnapshot.forEach((song) => {
+      document.getElementsByClassName('manage-display-song')[0].insertAdjacentHTML(
+        'beforeend',
+        `<div class="manage-song-bubble">
+          <img alt="avatar" src=${song.data().song_image} />
+          <div>
+            <p>${song.data().song_name}</p>
+            <div>${song.data().singer}</div>
+          </div>
+        </div>`
+      );
+    });
+  });
+};
+
+const AddManageSong = async ({ song, thumbnail, link, lyrics, singer }) => {
+  if (song === '' || thumbnail === '' || link === '' || lyrics === '' || singer === '') {
+    return false;
+  }
+  const usersRef = collection(db, 'Song');
+  const q = query(usersRef, where('song_name', '==', song));
+  const qs = await getDocs(q);
+  if (qs.docs.length > 0) {
+    return false;
+  } else {
+    await addDoc(usersRef, {
+      song_name: song,
+      song_image: thumbnail,
+      link: link,
+      lyrics: lyrics,
+      comment_array: [],
+      singer: singer,
+    });
+    return true;
+  }
+};
+
+const DeleteManageSong = async (song) => {
+  if (song === '') {
+    return;
+  }
+  const plRef = collection(db, 'Song');
+  const q = query(plRef, where('song_name', '==', song));
+  const qs = await getDocs(q);
+  const list = qs.docs.map((pl) => {
+    return pl.id;
+  });
+  if (list.length > 0) {
+    await deleteDoc(doc(db, 'Song', list[0]));
+  }
+};
+
 export {
   SignIn,
   DisplaySong,
@@ -408,4 +581,14 @@ export {
   PrevSong,
   SubmitTodo,
   GetTodo,
+  AddPlaylist,
+  DeletePlaylist,
+  AddPlaylistSong,
+  DeletePlaylistSong,
+  DisplayAccount,
+  AddAccount,
+  DeleteAccount,
+  DisplayManageSong,
+  AddManageSong,
+  DeleteManageSong,
 };

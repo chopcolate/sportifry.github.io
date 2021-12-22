@@ -1,21 +1,16 @@
 .playlist-card {
-  display: grid;
-  grid-template-columns: 15% 70% 5%;
-  border-radius: 10px;
-  margin: 0.5rem 0.5rem;
-  background-color: #143620;
-  height: 4rem;
-  padding: 0.5rem 0.5rem;
-  grid-column-gap: 4%;
+  margin: 1rem 1rem;
+  background-color: #1ed760;
+  height: 10rem;
+  width: 10rem;
 }
 
 .playlist-card img {
   width: 100%;
-  height: 3rem;
-  border-radius: 50%;
+  height: 5rem;
 }
 
-.playlist-card h1 {
-  font-size: 1rem;
-  height: 1rem;
+.playlist-card h1,
+p {
+  text-align: center;
 }

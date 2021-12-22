@@ -34,6 +34,10 @@
   padding: 0.3rem 0.1rem;
   height: 10vh;
   border-top: 1px solid #1ed760;
+  width: 80vw;
+  position: absolute;
+  left: 20vw;
+  bottom: 0vh;
 }
 
 /* music navbar */
@@ -102,7 +106,7 @@
 .chaticon {
   position: fixed;
   font-size: 3rem;
-  top: 91vh;
+  top: 80vh;
   left: 93vw;
   color: #1ed760;
 }
@@ -161,26 +165,41 @@
 .music-playlist {
   background-color: #2a2a2a;
   height: 90vh;
-  padding: 2vh 5vw;
+  padding: 0 5vw;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
-.music-playlist .playlist,
-.comment {
-  border: 1px solid white;
+.playlist {
+  display: flex;
+  min-height: 30vh;
+  flex-wrap: wrap;
+  align-content: flex-start;
 }
 
-.music-playlist .playlist {
+.add-playlist {
+  width: 10rem;
+  height: 10rem;
   background-color: #1ed760;
-  font-size: 3rem;
-  height: 40vh;
-}
-.music-playlist .playlist .playlist-header {
-  display: grid;
-  grid-template-columns: 80% 20%;
 }
 
-#playlist-song {
-  height: 20vh;
+.add-playlist input {
+  width: 9rem;
+  margin: 0.5rem 0.5rem;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  padding: 0 0.5rem;
+  height: 4vh;
+}
+
+.add-playlist button {
+  width: 4rem;
+  margin: 1rem 0.5rem;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  height: 4vh;
 }
 
 .comment-container {
@@ -189,11 +208,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 35vw;
+  width: 30vw;
+  margin: 1rem 1rem;
 }
 
 .comment-container input {
-  width: 30vw;
+  width: 25vw;
   height: 3vh;
   outline: none;
   border: none;
@@ -204,6 +224,7 @@
 
 /* music player */
 .music-site-player-controller {
+  color: white;
   display: flex;
   height: 10vh;
 }
@@ -259,8 +280,9 @@
 }
 
 #playing-lyric {
-  width: 35vw;
+  width: 30vw;
   padding: 1vh 1vw;
   border: 1px solid white;
   background-color: black;
+  margin: 1rem 1rem;
 }

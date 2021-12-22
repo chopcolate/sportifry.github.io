@@ -12,6 +12,7 @@
 }
 
 .commentbubble div p {
+  text-align: left !important;
   font-size: 0.7rem;
 }
 
@@ -21,4 +22,5 @@
   padding: 0 0.5rem;
   font-size: 0.5rem;
   overflow-wrap: break-word;
+  width: 85%;
 }

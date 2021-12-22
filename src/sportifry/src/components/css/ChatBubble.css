@@ -13,6 +13,7 @@
 
 .chatbubble div p {
   font-size: 0.7rem;
+  text-align: left;
 }
 
 .chatbubble div div {

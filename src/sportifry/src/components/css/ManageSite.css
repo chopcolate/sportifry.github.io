@@ -1,0 +1,59 @@
+.manage-container {
+  height: 90vh;
+  background-color: #282828;
+  overflow-y: scroll;
+}
+
+.manage-container input {
+  outline: none;
+  border: none;
+  margin-bottom: 2vh;
+}
+
+.manage-container label {
+  margin-top: 1vh;
+}
+
+.account,
+.manage-song {
+  display: flex;
+  height: 90vh;
+}
+
+.display-account,
+.handle-account,
+.manage-display-song,
+.manage-handle-song {
+  border: 1px solid white;
+  width: 40vw;
+  height: 90vh;
+  overflow-y: scroll;
+}
+
+.account-bubble,
+.manage-song-bubble {
+  display: flex;
+  background-color: #1ed760;
+  height: 10vh;
+  margin: 1rem 2vw;
+}
+
+.account-bubble img,
+.manage-song-bubble img {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  margin: 0.5rem 1rem;
+}
+
+.account-bubble p,
+.manage-song-bubble p {
+  text-align: left !important;
+  font-size: 1.5rem;
+}
+
+.handle-account,
+.manage-handle-song {
+  display: flex;
+  flex-direction: column;
+}

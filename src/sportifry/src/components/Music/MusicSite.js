@@ -2,7 +2,6 @@ import { useState } from 'react';
 import '../css/MusicSite.css';
 import MusicMain from './MusicMain';
 import { MusicNav, MusicNavNonUser } from './MusicNav';
-import { MusicPlayer } from './MusicPlayer';
 
 export default function MusicSite() {
   const [isLogin, setLogin] = useState(localStorage.getItem('username'));
@@ -25,7 +24,7 @@ export default function MusicSite() {
       )}
       <div id="music-container">
         <MusicMain username={isLogin} />
-        <MusicPlayer />
+        {/* <MusicPlayer /> */}
       </div>
     </div>
   );

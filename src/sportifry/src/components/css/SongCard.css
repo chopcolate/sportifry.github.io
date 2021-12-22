@@ -1,4 +1,5 @@
-.song-card {
+.song-card,
+.plsong {
   width: 11rem;
   height: 11rem;
   margin: 1rem 1rem;
@@ -7,30 +8,9 @@
   text-align: center;
 }
 
-.song-card img {
+.song-card img,
+.plsong img {
   width: 99%;
   margin: 0 0.5%;
   height: 7rem;
-}
-
-.plsong {
-  background-color: #143620;
-  display: grid;
-  grid-template-columns: 15% 70% 5%;
-  border-radius: 10px;
-  margin: 0.5rem 0.5rem;
-  height: 4rem;
-  padding: 0.5rem 0.5rem;
-  grid-column-gap: 4%;
-  cursor: pointer;
-}
-
-.plsong img {
-  width: 100%;
-  height: 3rem;
-  border-radius: 50%;
-}
-
-.plsong div {
-  padding: 0.1rem 0.5rem;
 }
