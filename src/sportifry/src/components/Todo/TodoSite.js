@@ -6,13 +6,11 @@ import { MusicPlayer } from '../Music/MusicPlayer';
 export default function TodoSite() {
   return (
     <div className="music-site">
-      <MusicNav
-        onLogout={() => {
-          localStorage.removeItem('role');
-        }}
-      />
-      <TodoMain />
-      <MusicPlayer />
+      <MusicNav />
+      <div id="music-container">
+        <TodoMain />
+        <MusicPlayer />
+      </div>
     </div>
   );
 }
