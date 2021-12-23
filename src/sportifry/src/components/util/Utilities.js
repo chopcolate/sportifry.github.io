@@ -129,7 +129,11 @@ const SearchSong = async (input) => {
   const songsList = qs.docs.map((song) => {
     return song.data();
   });
-  const searchList = songsList.filter((song) => song.singer.toLowerCase().includes(input.toLowerCase()));
+  const searchList = songsList.filter(
+    (song) =>
+      song.singer.toLowerCase().includes(input.toLowerCase()) ||
+      song.song_name.toLowerCase().includes(input.toLowerCase())
+  );
   document.getElementById('songbox').innerHTML = '';
   nowplaying = [];
 
