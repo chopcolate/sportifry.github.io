@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import {
   addDoc,
   arrayUnion,
+  arrayRemove,
   collection,
   deleteDoc,
   doc,
@@ -393,6 +394,7 @@ const DeletePlaylistSong = async (song) => {
 };
 
 const GetTodo = async () => {
+  let count = 1;
   const userRef = collection(db, 'User');
   const q = query(userRef, where('username', '==', localStorage.getItem('username')));
   const todocall = await getDocs(q);
@@ -406,24 +408,34 @@ const GetTodo = async () => {
         document.getElementsByClassName('todo-main')[0].insertAdjacentHTML(
           'beforeend',
           `
-        <div class="todo-card">
-          <form>
+        <div class="todo-card" id=${doc.id}>
             <div>
-              <h1>${doc.data().title}</h1>
+              <h1>Title: ${doc.data().title}</h1>
             </div>
             <div>
-              <h1>${doc.data().content}</h1>
+              <h1>Content: ${doc.data().content}</h1>
             </div>
-            <button class="todo-add-button">x</button>
-          </form>
+            <p>click to remove this task</p>
         </div>
-        `
-        );
+        `);
+        document.getElementsByClassName('todo-card')[count].addEventListener('click', (e)=>{
+          const todoid = e.target.id;
+          if (todoid ==='')
+          {
+            //ignore
+          }
+          else {
+              DeleteTodo(todoid, FindClickedTodoCard(todoid));
+              count--;
+              localStorage.setItem('todocount',count);
+          }
+        },{ passive: true});
+        count++;
       }
     });
   });
+  localStorage.setItem('todocount',--count);
 };
-
 const SubmitTodo = async (titlestring, contentstring) => {
   const todoRef = collection(db, 'TodoList');
   if (titlestring === '' || contentstring === '') {
@@ -445,20 +457,61 @@ const SubmitTodo = async (titlestring, contentstring) => {
     document.getElementsByClassName('todo-main')[0].insertAdjacentHTML(
       'beforeend',
       `
-        <div class="todo-card">
+        <div class="todo-card" id=${docRef.id}>
           <form>
             <div>
-              <h1>${titlestring}</h1>
+              <h1>Title: ${titlestring}</h1>
             </div>
             <div>
-              <h1>${contentstring}</h1>
+              <h1>Content: ${contentstring}</h1>
             </div>
-            <button class="todo-add-button">x</button>
+            <p>click to remove this task</p>
           </form>
         </div>
         `
     );
+    let tcount = parseInt(localStorage.getItem('todocount'));
+    localStorage.setItem('todocount',++tcount);
+    document.getElementsByClassName('todo-card')[parseInt(localStorage.getItem('todocount'))].addEventListener('click',(e)=>{
+      const todoid = e.target.id;
+          if (todoid ==='')
+          {
+            //ignore
+          }
+          else {
+              DeleteTodo(todoid, FindClickedTodoCard(todoid));
+              let count = localStorage.getItem('todocount');
+              localStorage.setItem('todocount',--count);
+          }
+    }, { passive: true});
     return true;
+  }
+};
+function FindClickedTodoCard(todoid){ 
+  const n = localStorage.getItem('todocount');
+  let i = 1;
+  for (i;i<=n;i++){
+    if(document.getElementsByClassName('todo-card')[i].id === todoid){
+      return i;
+    }
+  }
+};
+
+const DeleteTodo = async (todoid, currentcardid)=>{
+  if(currentcardid ===0){
+    // ignore;
+  }
+  else{
+  await deleteDoc(doc(db, "TodoList", todoid));
+  const userRef = await getDocs(query(collection(db, 'User'), where('username', '==', localStorage.getItem('username'))));
+  userRef.forEach(async (user) => {
+    const todoarrayRef = doc(db, 'User', user.id);
+    await updateDoc(todoarrayRef, {
+        to_do_array: arrayRemove(todoid)
+    });
+  });
+  var removehtml = document.getElementsByClassName('todo-card')[currentcardid];
+  removehtml.remove();
   }
 };
 
@@ -583,6 +636,7 @@ export {
   PrevSong,
   SubmitTodo,
   GetTodo,
+  DeleteTodo,
   AddPlaylist,
   DeletePlaylist,
   AddPlaylistSong,
