@@ -255,26 +255,24 @@ const DisplaySongPL = async () => {
     for (let song of songarr) {
       const q = query(songRef, where('song_name', '==', song));
       const qs1 = await getDocs(q);
-      const list = qs1.docs.map((song) => {
-        return song.data();
-      });
-      // eslint-disable-next-line
-      list.forEach((song) => {
-        document.getElementById('playlist-song').insertAdjacentHTML(
-          'beforeend',
-          `<div class="plsong" >
-          <img alt="thumbnail" src=${song.song_image} />
+      if (qs1.docs.length === 0) {
+        continue;
+      }
+      const list = qs1.docs[0].data();
+      document.getElementById('playlist-song').insertAdjacentHTML(
+        'beforeend',
+        `<div class="plsong" >
+          <img alt="thumbnail" src=${list.song_image} />
           <div>
-            <h1>${song.song_name}</h1>
-            <p> ${song.singer}</p>
+            <h1>${list.song_name}</h1>
+            <p> ${list.singer}</p>
           </div>
         </div>`
-        );
-        document.getElementsByClassName('plsong')[count].addEventListener('click', (e) => {
-          PlaySong(song);
-        });
-        nowplaying.push(song);
+      );
+      document.getElementsByClassName('plsong')[count].addEventListener('click', () => {
+        PlaySong(song);
       });
+      nowplaying.push(song);
       count++;
     }
   });
