@@ -275,9 +275,9 @@ const DisplaySongPL = async () => {
         </div>`
       );
       document.getElementsByClassName('plsong')[count].addEventListener('click', () => {
-        PlaySong(song);
+        PlaySong(list);
       });
-      nowplaying.push(song);
+      nowplaying.push(list);
       count++;
     }
   });
@@ -417,24 +417,27 @@ const GetTodo = async () => {
             </div>
             <p>click to remove this task</p>
         </div>
-        `);
-        document.getElementsByClassName('todo-card')[count].addEventListener('click', (e)=>{
-          const todoid = e.target.id;
-          if (todoid ==='')
-          {
-            //ignore
-          }
-          else {
+        `
+        );
+        document.getElementsByClassName('todo-card')[count].addEventListener(
+          'click',
+          (e) => {
+            const todoid = e.target.id;
+            if (todoid === '') {
+              //ignore
+            } else {
               DeleteTodo(todoid, FindClickedTodoCard(todoid));
               count--;
-              localStorage.setItem('todocount',count);
-          }
-        },{ passive: true});
+              localStorage.setItem('todocount', count);
+            }
+          },
+          { passive: true }
+        );
         count++;
       }
     });
   });
-  localStorage.setItem('todocount',--count);
+  localStorage.setItem('todocount', --count);
 };
 const SubmitTodo = async (titlestring, contentstring) => {
   const todoRef = collection(db, 'TodoList');
@@ -471,47 +474,50 @@ const SubmitTodo = async (titlestring, contentstring) => {
         `
     );
     let tcount = parseInt(localStorage.getItem('todocount'));
-    localStorage.setItem('todocount',++tcount);
-    document.getElementsByClassName('todo-card')[parseInt(localStorage.getItem('todocount'))].addEventListener('click',(e)=>{
-      const todoid = e.target.id;
-          if (todoid ==='')
-          {
-            //ignore
-          }
-          else {
-              DeleteTodo(todoid, FindClickedTodoCard(todoid));
-              let count = localStorage.getItem('todocount');
-              localStorage.setItem('todocount',--count);
-          }
-    }, { passive: true});
+    localStorage.setItem('todocount', ++tcount);
+    document.getElementsByClassName('todo-card')[parseInt(localStorage.getItem('todocount'))].addEventListener(
+      'click',
+      (e) => {
+        const todoid = e.target.id;
+        if (todoid === '') {
+          //ignore
+        } else {
+          DeleteTodo(todoid, FindClickedTodoCard(todoid));
+          let count = localStorage.getItem('todocount');
+          localStorage.setItem('todocount', --count);
+        }
+      },
+      { passive: true }
+    );
     return true;
   }
 };
-function FindClickedTodoCard(todoid){ 
+function FindClickedTodoCard(todoid) {
   const n = localStorage.getItem('todocount');
   let i = 1;
-  for (i;i<=n;i++){
-    if(document.getElementsByClassName('todo-card')[i].id === todoid){
+  for (i; i <= n; i++) {
+    if (document.getElementsByClassName('todo-card')[i].id === todoid) {
       return i;
     }
   }
-};
+}
 
-const DeleteTodo = async (todoid, currentcardid)=>{
-  if(currentcardid ===0){
+const DeleteTodo = async (todoid, currentcardid) => {
+  if (currentcardid === 0) {
     // ignore;
-  }
-  else{
-  await deleteDoc(doc(db, "TodoList", todoid));
-  const userRef = await getDocs(query(collection(db, 'User'), where('username', '==', localStorage.getItem('username'))));
-  userRef.forEach(async (user) => {
-    const todoarrayRef = doc(db, 'User', user.id);
-    await updateDoc(todoarrayRef, {
-        to_do_array: arrayRemove(todoid)
+  } else {
+    await deleteDoc(doc(db, 'TodoList', todoid));
+    const userRef = await getDocs(
+      query(collection(db, 'User'), where('username', '==', localStorage.getItem('username')))
+    );
+    userRef.forEach(async (user) => {
+      const todoarrayRef = doc(db, 'User', user.id);
+      await updateDoc(todoarrayRef, {
+        to_do_array: arrayRemove(todoid),
+      });
     });
-  });
-  var removehtml = document.getElementsByClassName('todo-card')[currentcardid];
-  removehtml.remove();
+    var removehtml = document.getElementsByClassName('todo-card')[currentcardid];
+    removehtml.remove();
   }
 };
 
