@@ -65,13 +65,17 @@ export default function Song() {
         >
           Add
         </button>
-        <button
-          onClick={() => {
-            DeleteManageSong(song);
-          }}
-        >
-          Delete
-        </button>
+        {localStorage.getItem('role') === 'admin' ? (
+          <button
+            onClick={() => {
+              DeleteManageSong(song);
+            }}
+          >
+            Delete
+          </button>
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );
